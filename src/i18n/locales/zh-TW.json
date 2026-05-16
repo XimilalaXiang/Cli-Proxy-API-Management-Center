@@ -917,6 +917,7 @@
     "grok_code_placeholder": "貼上授權碼...",
     "grok_code_submit": "提交授權碼",
     "grok_code_required": "請先貼上授權碼。",
+    "grok_code_success": "授權碼已提交，正在等待新增帳號...",
     "qwen_oauth_title": "Qwen OAuth",
     "qwen_oauth_button": "開始 Qwen 登入",
     "qwen_oauth_hint": "透過裝置授權流程登入 Qwen 服務，自動取得並儲存驗證檔案。",

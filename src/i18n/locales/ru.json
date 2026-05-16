@@ -914,6 +914,7 @@
     "grok_code_placeholder": "Вставьте код авторизации...",
     "grok_code_submit": "Отправить код",
     "grok_code_required": "Пожалуйста, сначала вставьте код авторизации.",
+    "grok_code_success": "Код авторизации отправлен. Ожидание добавления аккаунта...",
     "oauth_callback_label": "Callback URL",
     "oauth_callback_placeholder": "http://localhost:1455/auth/callback?code=...&state=...",
     "oauth_callback_hint": "Режим удалённого браузера: после перенаправления провайдера на http://localhost:... скопируйте полный URL и отправьте его здесь.",

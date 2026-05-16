@@ -320,7 +320,7 @@ export function OAuthPage() {
     try {
       await oauthApi.submitCallback(provider, redirectUrl);
       updateProviderState(provider, { callbackSubmitting: false, callbackStatus: 'success' });
-      showNotification(t('auth_login.oauth_callback_success'), 'success');
+      showNotification(t('auth_login.grok_code_success'), 'success');
     } catch (err: unknown) {
       const message = getErrorMessage(err);
       updateProviderState(provider, {

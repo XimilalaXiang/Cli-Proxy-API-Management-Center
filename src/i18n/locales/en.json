@@ -917,6 +917,7 @@
     "grok_code_placeholder": "Paste the authorization code here...",
     "grok_code_submit": "Submit Code",
     "grok_code_required": "Please paste the authorization code first.",
+    "grok_code_success": "Authorization code submitted. Waiting for account to be added...",
     "oauth_callback_label": "Callback URL",
     "oauth_callback_placeholder": "http://localhost:1455/auth/callback?code=...&state=...",
     "oauth_callback_hint": "Remote browser mode: after the provider redirects to http://localhost:..., copy the full URL and submit it here.",
