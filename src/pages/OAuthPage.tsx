@@ -72,7 +72,8 @@ const PROVIDERS: { id: OAuthProvider; titleKey: string; hintKey: string; urlLabe
   { id: 'grok', titleKey: 'auth_login.grok_oauth_title', hintKey: 'auth_login.grok_oauth_hint', urlLabelKey: 'auth_login.grok_oauth_url_label', icon: iconGrok }
 ];
 
-const CALLBACK_SUPPORTED: OAuthProvider[] = ['codex', 'anthropic', 'antigravity', 'gemini-cli', 'grok'];
+const CALLBACK_SUPPORTED: OAuthProvider[] = ['codex', 'anthropic', 'antigravity', 'gemini-cli'];
+const CODE_PASTE_PROVIDERS: OAuthProvider[] = ['grok'];
 const SUCCESS_RESET_DELAY_MS = 5000;
 const getProviderI18nPrefix = (provider: OAuthProvider) => provider.replace('-', '_');
 const getAuthKey = (provider: OAuthProvider, suffix: string) =>
@@ -299,6 +300,41 @@ export function OAuthPage() {
     }
   };
 
+  const submitAuthCode = async (provider: OAuthProvider) => {
+    const code = (states[provider]?.callbackUrl || '').trim();
+    const state = states[provider]?.state;
+    if (!code) {
+      showNotification(t('auth_login.grok_code_required'), 'warning');
+      return;
+    }
+    if (!state) {
+      showNotification(t('auth_login.missing_state'), 'error');
+      return;
+    }
+    const redirectUrl = `http://127.0.0.1:14567/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+    updateProviderState(provider, {
+      callbackSubmitting: true,
+      callbackStatus: undefined,
+      callbackError: undefined
+    });
+    try {
+      await oauthApi.submitCallback(provider, redirectUrl);
+      updateProviderState(provider, { callbackSubmitting: false, callbackStatus: 'success' });
+      showNotification(t('auth_login.oauth_callback_success'), 'success');
+    } catch (err: unknown) {
+      const message = getErrorMessage(err);
+      updateProviderState(provider, {
+        callbackSubmitting: false,
+        callbackStatus: 'error',
+        callbackError: message || undefined
+      });
+      showNotification(
+        `${t(getAuthKey(provider, 'oauth_status_error'))} ${message || ''}`,
+        'error'
+      );
+    }
+  };
+
   const handleVertexFilePick = () => {
     vertexFileInputRef.current?.click();
   };
@@ -466,6 +502,43 @@ export function OAuthPage() {
                       {state.callbackStatus === 'error' && (
                         <div className="status-badge error">
                           {t('auth_login.oauth_callback_status_error')} {state.callbackError || ''}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {CODE_PASTE_PROVIDERS.includes(provider.id) && Boolean(state.url) && (
+                    <div className={styles.callbackSection}>
+                      <Input
+                        label={t('auth_login.grok_code_label')}
+                        hint={t('auth_login.grok_code_hint')}
+                        value={state.callbackUrl || ''}
+                        onChange={(e) =>
+                          updateProviderState(provider.id, {
+                            callbackUrl: e.target.value,
+                            callbackStatus: undefined,
+                            callbackError: undefined
+                          })
+                        }
+                        placeholder={t('auth_login.grok_code_placeholder')}
+                      />
+                      <div className={styles.callbackActions}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => submitAuthCode(provider.id)}
+                          loading={state.callbackSubmitting}
+                        >
+                          {t('auth_login.grok_code_submit')}
+                        </Button>
+                      </div>
+                      {state.callbackStatus === 'success' && state.status === 'waiting' && (
+                        <div className="status-badge success">
+                          {t('auth_login.oauth_callback_status_success')}
+                        </div>
+                      )}
+                      {state.callbackStatus === 'error' && (
+                        <div className="status-badge error">
+                          {t(getAuthKey(provider.id, 'oauth_status_error'))} {state.callbackError || ''}
                         </div>
                       )}
                     </div>
