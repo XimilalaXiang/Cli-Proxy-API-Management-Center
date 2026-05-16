@@ -901,7 +901,7 @@
     "kimi_oauth_status_error": "Authentication failed:",
     "kimi_oauth_start_error": "Failed to start Kimi OAuth:",
     "kimi_oauth_polling_error": "Failed to check authentication status:",
-    "grok_oauth_title": "Grok Build",
+    "grok_oauth_title": "Grok Build OAuth",
     "grok_oauth_button": "Start Grok Login",
     "grok_oauth_hint": "Login to xAI Grok Build through OAuth PKCE flow. After authorizing in the browser, authentication completes automatically.",
     "grok_oauth_url_label": "Authorization URL:",
